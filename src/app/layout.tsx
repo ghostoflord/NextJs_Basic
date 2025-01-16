@@ -1,113 +1,238 @@
+'use client'
 import * as React from 'react';
-import Link from 'next/link';
+import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import HomeIcon from '@mui/icons-material/Home';
-import StarIcon from '@mui/icons-material/Star';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import SettingsIcon from '@mui/icons-material/Settings';
-import SupportIcon from '@mui/icons-material/Support';
-import LogoutIcon from '@mui/icons-material/Logout';
-import ThemeRegistry from '@/components/theme-registry/theme.registry';
+import InputBase from '@mui/material/InputBase';
+import Badge from '@mui/material/Badge';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MailIcon from '@mui/icons-material/Mail';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Link from 'next/link';
 
-export const metadata = {
-  title: 'Next.js App Router + Material UI v5',
-  description: 'Next.js App Router + Material UI v5',
-};
+//styled-component
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
 
-const DRAWER_WIDTH = 240;
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
-const LINKS = [
-  { text: 'Home', href: '/', icon: HomeIcon },
-  { text: 'Starred', href: '/starred', icon: StarIcon },
-  { text: 'Tasks', href: '/tasks', icon: ChecklistIcon },
-];
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      // width: '20ch',
+      width: '400px',
+    },
+  },
+}));
 
-const PLACEHOLDER_LINKS = [
-  { text: 'Settings', icon: SettingsIcon },
-  { text: 'Support', icon: SupportIcon },
-  { text: 'Logout', icon: LogoutIcon },
-];
+export default function AppHeader() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
+    React.useState<null | HTMLElement>(null);
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      // anchorOrigin={{
+      //     vertical: 'top',
+      //     horizontal: 'right',
+      // }}
+      id={menuId}
+      keepMounted
+      // transformOrigin={{
+      //     vertical: 'top',
+      //     horizontal: 'right',
+      // }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+    >
+      <MenuItem>
+        <Link href={"/profile"} style={{
+          color: "unset",
+          textDecoration: "unset"
+        }}>
+          Profile
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="error">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 17 new notifications"
+          color="inherit"
+        >
+          <Badge badgeContent={17} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
+
   return (
-    <html lang="en">
-      <body>
-        <ThemeRegistry>
-          <AppBar position="fixed" sx={{ zIndex: 2000 }}>
-            <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-              <DashboardIcon sx={{ color: '#444', mr: 2, transform: 'translateY(-2px)' }} />
-              <Typography variant="h6" noWrap component="div" color="black">
-                Next.js App Router
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            sx={{
-              width: DRAWER_WIDTH,
-              flexShrink: 0,
-              '& .MuiDrawer-paper': {
-                width: DRAWER_WIDTH,
-                boxSizing: 'border-box',
-                top: ['48px', '56px', '64px'],
-                height: 'auto',
-                bottom: 0,
-              },
-            }}
-            variant="permanent"
-            anchor="left"
-          >
-            <Divider />
-            <List>
-              {LINKS.map(({ text, href, icon: Icon }) => (
-                <ListItem key={href} disablePadding>
-                  <ListItemButton component={Link} href={href}>
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-            <Divider sx={{ mt: 'auto' }} />
-            <List>
-              {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Drawer>
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              bgcolor: 'background.default',
-              ml: `${DRAWER_WIDTH}px`,
-              mt: ['48px', '56px', '64px'],
-              p: 3,
-            }}
-          >
-            {children}
-          </Box>
-        </ThemeRegistry>
-      </body>
-    </html>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        position="static"
+        sx={{
+          background: "#4c5c6c"
+        }}
+      >
+        <Container>
+          <Toolbar>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: 'none', sm: 'block' } }}
+            >
+              HoiDanIt SC
+            </Typography>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{
+              display: { xs: 'none', md: 'flex' },
+              gap: "20px",
+              alignItems: "center",
+              cursor: "pointer",
+
+              "> a": {
+                color: "unset",
+                textDecoration: "unset"
+              }
+            }}>
+              <Link href={"/playlist"}>Playlists</Link>
+              <Link href={"/like"}>Likes</Link>
+              <span>Upload</span>
+              <Avatar
+                onClick={handleProfileMenuOpen}
+              >ER</Avatar>
+            </Box>
+            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      {renderMobileMenu}
+      {renderMenu}
+    </Box>
   );
 }
