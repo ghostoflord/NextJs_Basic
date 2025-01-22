@@ -10,6 +10,7 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
@@ -17,9 +18,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from "next-auth/react";
-import Link from 'next/link';
 
 //styled-component
 const Search = styled('div')(({ theme }) => ({
@@ -65,6 +66,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function AppHeader() {
     const { data: session } = useSession();
+
     const router = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -94,15 +96,30 @@ export default function AppHeader() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
+            // anchorOrigin={{
+            //     vertical: 'top',
+            //     horizontal: 'right',
+            // }}
             id={menuId}
             keepMounted
+            // transformOrigin={{
+            //     vertical: 'top',
+            //     horizontal: 'right',
+            // }}
             open={isMenuOpen}
             onClose={handleMenuClose}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem>
+                <Link href={"/profile"} style={{
+                    color: "unset",
+                    textDecoration: "unset"
+                }}>
+                    Profile
+                </Link>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
     );
 
@@ -158,7 +175,6 @@ export default function AppHeader() {
         </Menu>
     );
 
-
     const handleRedirectHome = () => {
         router.push("/")
     }
@@ -199,7 +215,12 @@ export default function AppHeader() {
                             display: { xs: 'none', md: 'flex' },
                             gap: "20px",
                             alignItems: "center",
-                            cursor: "pointer"
+                            cursor: "pointer",
+
+                            "> a": {
+                                color: "unset",
+                                textDecoration: "unset"
+                            }
                         }}>
                             {
                                 session ? //fragment react
@@ -216,6 +237,8 @@ export default function AppHeader() {
                                         <Link href={"/api/auth/signin"}>Login</Link>
                                     </>
                             }
+
+
                         </Box>
                         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
                             <IconButton
