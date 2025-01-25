@@ -203,7 +203,7 @@ export default function AppHeader() {
                             }}
                             onClick={() => handleRedirectHome()}
                         >
-                            HoiDanIt SC
+                            Ghost SC
                         </Typography>
                         <Search>
                             <SearchIconWrapper>
