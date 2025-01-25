@@ -203,7 +203,7 @@ export default function AppHeader() {
                             }}
                             onClick={() => handleRedirectHome()}
                         >
-                            Ghost SC
+                            HoiDanIt SC
                         </Typography>
                         <Search>
                             <SearchIconWrapper>
@@ -231,7 +231,7 @@ export default function AppHeader() {
                                     <>
                                         <Link href={"/playlist"}>Playlists</Link>
                                         <Link href={"/like"}>Likes</Link>
-                                        <span>Upload</span>
+                                        <Link href={"/track/upload"}>Upload</Link>
                                         <Avatar
                                             onClick={handleProfileMenuOpen}
                                         >ER</Avatar>
