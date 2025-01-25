@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { useTrackContext } from '@/lib/track.wrapper';
+import PauseIcon from '@mui/icons-material/Pause';
+
 interface IProps {
     data: ITrackTop
 }
@@ -31,11 +34,30 @@ const ProfileTracks = (props: IProps) => {
                     <IconButton aria-label="previous">
                         {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                     </IconButton>
-                    <IconButton aria-label="play/pause"
-                        onClick={() => setCurrentTrack({ ...data, isPlaying: false })}
-                    >
-                        <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-                    </IconButton>
+                    {
+                        (data._id !== currentTrack._id ||
+                            data._id === currentTrack._id && currentTrack.isPlaying === false
+                        )
+                        &&
+                        <IconButton aria-label="play/pause"
+                            onClick={(e) => {
+                                setCurrentTrack({ ...data, isPlaying: true });
+                            }}
+                        >
+                            <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+                        </IconButton>
+                    }
+                    {data._id === currentTrack._id && currentTrack.isPlaying === true
+                        &&
+                        <IconButton aria-label="play/pause"
+                            onClick={(e) => {
+                                setCurrentTrack({ ...data, isPlaying: false });
+                            }}
+                        >
+                            <PauseIcon sx={{ height: 38, width: 38 }}
+                            />
+                        </IconButton>
+                    }
                     <IconButton aria-label="next">
                         {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
                     </IconButton>
