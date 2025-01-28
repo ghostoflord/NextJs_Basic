@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
@@ -10,9 +9,10 @@ import PauseIcon from '@mui/icons-material/Pause';
 import './wave.scss';
 import { Tooltip } from "@mui/material";
 import { useTrackContext } from "@/lib/track.wrapper";
-
 import { fetchDefaultImages } from "@/utils/api";
 import CommentTrack from "./comment.track";
+import LikeTrack from "./like.track";
+
 
 interface IProps {
     track: ITrackTop | null;
@@ -106,32 +106,8 @@ const WaveTrack = (props: IProps) => {
         return `${minutes}:${paddedSeconds}`
     }
 
-    // const arrComments = [
-    //     {
-    //         id: 1,
-    //         avatar: "http://localhost:8000/images/chill1.png",
-    //         moment: 10,
-    //         user: "username 1",
-    //         content: "just a comment1"
-    //     },
-    //     {
-    //         id: 2,
-    //         avatar: "http://localhost:8000/images/chill1.png",
-    //         moment: 30,
-    //         user: "username 2",
-    //         content: "just a comment3"
-    //     },
-    //     {
-    //         id: 3,
-    //         avatar: "http://localhost:8000/images/chill1.png",
-    //         moment: 50,
-    //         user: "username 3",
-    //         content: "just a comment3"
-    //     },
-    // ]
-
     const calLeft = (moment: number) => {
-        const hardCodeDuration = 199;
+        const hardCodeDuration = wavesurfer?.getDuration() ?? 0;
         const percent = (moment / hardCodeDuration) * 100;
         return `${percent}%`
     }
@@ -255,7 +231,7 @@ const WaveTrack = (props: IProps) => {
                                                     zIndex: 20,
                                                     left: calLeft(item.moment)
                                                 }}
-                                                src={`http://localhost:8000/images/chill1.png`}
+                                                src={fetchDefaultImages(item.user.type)}
                                             />
                                         </Tooltip>
                                     )
@@ -272,13 +248,32 @@ const WaveTrack = (props: IProps) => {
                         alignItems: "center"
                     }}
                 >
-                    <div style={{
-                        background: "#ccc",
-                        width: 250,
-                        height: 250
-                    }}>
-                    </div>
+                    {track?.imgUrl ?
+                        <img
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track?.imgUrl}`}
+                            width={250}
+                            height={250}
+                        />
+                        :
+                        <div style={{
+                            background: "#ccc",
+                            width: 250,
+                            height: 250
+                        }}></div>
+                    }
                 </div>
+            </div>
+            <div>
+                <LikeTrack
+                    track={track}
+                />
+            </div>
+            <div>
+                <CommentTrack
+                    comments={comments}
+                    track={track}
+                    wavesurfer={wavesurfer}
+                />
             </div>
         </div >
     )

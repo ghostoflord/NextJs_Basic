@@ -1,15 +1,16 @@
-'use client'
 import WaveTrack from '@/components/track/wave.track';
+import Container from '@mui/material/Container';
 import { sendRequest } from '@/utils/api';
-import { Container } from '@mui/material';
-import { useSearchParams } from 'next/navigation'
 
 const DetailTrackPage = async (props: any) => {
     const { params } = props;
+
     const res = await sendRequest<IBackendRes<ITrackTop>>({
         url: `http://localhost:8000/api/v1/tracks/${params.slug}`,
         method: "GET",
+        nextOption: { cache: "no-store" }
     })
+
     const res1 = await sendRequest<IBackendRes<IModelPaginate<ITrackComment>>>({
         url: `http://localhost:8000/api/v1/tracks/comments`,
         method: "POST",
@@ -20,11 +21,9 @@ const DetailTrackPage = async (props: any) => {
             sort: "-createdAt"
         },
     })
-    const searchParams = useSearchParams()
-    const search = searchParams.get('audio')
-    console.log(">>> check search: ", search)
+
     return (
-        <Container>DetailTrackPage
+        <Container>
             <div>
                 <WaveTrack
                     track={res?.data ?? null}
@@ -34,4 +33,5 @@ const DetailTrackPage = async (props: any) => {
         </Container>
     )
 }
+
 export default DetailTrackPage;
