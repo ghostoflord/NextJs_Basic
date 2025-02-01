@@ -17,7 +17,13 @@ export async function generateMetadata(
     })
     return {
         title: res.data?.title,
-        description: res.data?.description
+        description: res.data?.description,
+        openGraph: {
+            title: 'Ghost',
+            description: 'Update Beyond Your Coding Skills',
+            type: 'website',
+            images: [`https://raw.githubusercontent.com/hoidanit/images-hosting/master/eric.png`],
+        },
     }
 }
 
