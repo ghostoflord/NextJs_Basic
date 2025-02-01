@@ -1,4 +1,5 @@
 'use client'
+
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -12,6 +13,8 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { useTrackContext } from '@/lib/track.wrapper';
 import PauseIcon from '@mui/icons-material/Pause';
 import Link from 'next/link';
+import { convertSlugUrl } from '@/utils/api';
+
 interface IProps {
     data: ITrackTop
 }
@@ -19,6 +22,7 @@ const ProfileTracks = (props: IProps) => {
     const { data } = props;
     const theme = useTheme();
     const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
+
     return (
         <Card sx={{ display: 'flex', justifyContent: "space-between" }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -28,11 +32,12 @@ const ProfileTracks = (props: IProps) => {
                             textDecoration: "none",
                             color: "unset"
                         }}
-                        href={`/track/${data._id}?audio=${data.trackUrl}&id=${data._id}`}>
+                        href={`/track/${convertSlugUrl(data.title)}-${data._id}.html?audio=${data.trackUrl}`}>
                         <Typography component="div" variant="h5" >
                             {data.title}
                         </Typography>
                     </Link>
+
                     <Typography variant="subtitle1" color="text.secondary" component="div">
                         {data.description}
                     </Typography>
@@ -41,6 +46,7 @@ const ProfileTracks = (props: IProps) => {
                     <IconButton aria-label="previous">
                         {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                     </IconButton>
+
                     {
                         (data._id !== currentTrack._id ||
                             data._id === currentTrack._id && currentTrack.isPlaying === false
@@ -54,6 +60,7 @@ const ProfileTracks = (props: IProps) => {
                             <PlayArrowIcon sx={{ height: 38, width: 38 }} />
                         </IconButton>
                     }
+
                     {data._id === currentTrack._id && currentTrack.isPlaying === true
                         &&
                         <IconButton aria-label="play/pause"
@@ -65,6 +72,8 @@ const ProfileTracks = (props: IProps) => {
                             />
                         </IconButton>
                     }
+
+
                     <IconButton aria-label="next">
                         {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
                     </IconButton>
@@ -79,4 +88,5 @@ const ProfileTracks = (props: IProps) => {
         </Card>
     );
 }
+
 export default ProfileTracks;

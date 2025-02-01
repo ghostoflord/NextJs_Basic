@@ -1,4 +1,6 @@
 import queryString from 'query-string';
+import slugify from 'slugify';
+
 export const sendRequest = async <T>(props: IRequest) => { //type
     let {
         url,
@@ -9,6 +11,7 @@ export const sendRequest = async <T>(props: IRequest) => { //type
         headers = {},
         nextOption = {}
     } = props;
+
     const options: any = {
         method: method,
         // by default setting the content-type to be json type
@@ -17,9 +20,11 @@ export const sendRequest = async <T>(props: IRequest) => { //type
         ...nextOption
     };
     if (useCredentials) options.credentials = "include";
+
     if (queryParams) {
         url = `${url}?${queryString.stringify(queryParams)}`;
     }
+
     return fetch(url, options).then(res => {
         if (res.ok) {
             return res.json() as T; //generic
@@ -46,6 +51,7 @@ export const sendRequestFile = async <T>(props: IRequest) => { //type
         headers = {},
         nextOption = {}
     } = props;
+
     const options: any = {
         method: method,
         // by default setting the content-type to be json type
@@ -54,9 +60,11 @@ export const sendRequestFile = async <T>(props: IRequest) => { //type
         ...nextOption
     };
     if (useCredentials) options.credentials = "include";
+
     if (queryParams) {
         url = `${url}?${queryString.stringify(queryParams)}`;
     }
+
     return fetch(url, options).then(res => {
         if (res.ok) {
             return res.json() as T; //generic
@@ -72,8 +80,18 @@ export const sendRequestFile = async <T>(props: IRequest) => { //type
         }
     });
 };
+
 export const fetchDefaultImages = (type: string) => {
     if (type === "GITHUB") return "/user/default-github.png";
     if (type === "GOOGLE") return "/user/default-google.png";
     return "/user/default-user.png"
+}
+
+export const convertSlugUrl = (str: string) => {
+    if (!str) return "";
+    str = slugify(str, {
+        lower: true,
+        locale: 'vi'
+    })
+    return str;
 }
