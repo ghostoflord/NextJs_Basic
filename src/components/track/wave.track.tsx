@@ -9,11 +9,11 @@ import PauseIcon from '@mui/icons-material/Pause';
 import './wave.scss';
 import { Tooltip } from "@mui/material";
 import { useTrackContext } from "@/lib/track.wrapper";
-import { fetchDefaultImages } from "@/utils/api";
+import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import CommentTrack from "./comment.track";
+import { useRouter } from "next/navigation";
+
 import LikeTrack from "./like.track";
-
-
 interface IProps {
     track: ITrackTop | null;
     comments: ITrackComment[]
@@ -21,6 +21,9 @@ interface IProps {
 
 const WaveTrack = (props: IProps) => {
     const { track, comments } = props;
+    const router = useRouter();
+    const firstViewRef = useRef(true);
+
     const searchParams = useSearchParams()
     const fileName = searchParams.get('audio');
     const containerRef = useRef<HTMLDivElement>(null);
@@ -123,6 +126,21 @@ const WaveTrack = (props: IProps) => {
             setCurrentTrack({ ...track, isPlaying: false })
     }, [track])
 
+    const handleIncreaseView = async () => {
+        if (firstViewRef.current) {
+            await sendRequest<IBackendRes<IModelPaginate<ITrackLike>>>({
+                url: `http://localhost:8000/api/v1/tracks/increase-view`,
+                method: "POST",
+                body: {
+                    trackId: track?._id
+                }
+            })
+
+            router.refresh();
+            firstViewRef.current = false;
+        }
+    }
+
     return (
         <div style={{ marginTop: 20 }}>
             <div
@@ -148,6 +166,7 @@ const WaveTrack = (props: IProps) => {
                             <div
                                 onClick={() => {
                                     onPlayClick();
+                                    handleIncreaseView();
                                     if (track && wavesurfer) {
                                         setCurrentTrack({ ...currentTrack, isPlaying: false })
                                     }
