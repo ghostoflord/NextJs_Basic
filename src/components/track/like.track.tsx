@@ -62,6 +62,15 @@ const LikeTrack = (props: IProps) => {
                 secret: "justArandomString"
             }
         })
+
+        await sendRequest<IBackendRes<any>>({
+            url: `/api/revalidate`,
+            method: "POST",
+            queryParams: {
+                tag: "liked-by-user",
+                secret: "justArandomString"
+            }
+        })
         router.refresh();
 
     }
